@@ -1,4 +1,7 @@
 import { Controller, Get, Delete, Post, Put, Body, Param } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common/enums';
+import { HttpException } from '@nestjs/common/exceptions';
+import { ParseUUIDPipe } from '@nestjs/common/pipes';
 import { SkipThrottle } from '@nestjs/throttler/dist/throttler.decorator';
 import { BookService } from './book.service';
 import { Book } from './data/book.dto';
@@ -15,7 +18,7 @@ export class BookController {
     }
 
     @Get(":id")
-    getBookById(@Param("id") bookId: string): Book[] {
+    getBookById(@Param("id", ParseUUIDPipe) bookId: string): Book[] {
         return this.bookService.findBookByIdBookService(bookId);
     }
 
@@ -30,7 +33,7 @@ export class BookController {
     }
 
     @Delete("delete/:id")
-    deleteBook(@Param("id") bookId: string): string {
+    deleteBook(@Param("id", new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) bookId: string): string {
         return this.bookService.deleteBookService(bookId);
     }
 }

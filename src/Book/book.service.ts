@@ -33,7 +33,7 @@ export class BookService {
     }
 
     findBookByIdBookService(bookId: string): Book[] {
-        return this.books = this.books.filter((currentbook) => {
+        return this.books.filter((currentbook) => {
             return currentbook.id == bookId;
         })
     }
