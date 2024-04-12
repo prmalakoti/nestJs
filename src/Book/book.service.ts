@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 uuidv4()
 import { Book } from './data/book.dto';
@@ -35,6 +35,19 @@ export class BookService {
     findBookByIdBookService(bookId: string): Book[] {
         return this.books.filter((currentbook) => {
             return currentbook.id == bookId;
+        })
+    }
+    getException(age: number): Promise<any> {
+        return new Promise((resolve, reject) => {
+            if (age >= 18) {
+                resolve("You are major for voting 😆");
+            } else {
+                // throw new NotFoundException({
+                //     error: 'This is a custom message',
+                // });
+                throw new HttpException('No! This is a custom message with custom status code', HttpStatus.FORBIDDEN
+                );
+            }
         })
     }
 }

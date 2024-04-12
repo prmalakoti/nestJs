@@ -1,8 +1,10 @@
 import { Controller, Get, Delete, Post, Put, Body, Param } from '@nestjs/common';
+import { Query } from '@nestjs/common/decorators';
 import { HttpStatus } from '@nestjs/common/enums';
-import { HttpException } from '@nestjs/common/exceptions';
-import { ParseUUIDPipe } from '@nestjs/common/pipes';
+import { NotFoundException } from '@nestjs/common/exceptions';
+import { ParseIntPipe, ParseUUIDPipe } from '@nestjs/common/pipes';
 import { SkipThrottle } from '@nestjs/throttler/dist/throttler.decorator';
+import { NotFoundError } from 'rxjs';
 import { BookService } from './book.service';
 import { Book } from './data/book.dto';
 
@@ -15,6 +17,10 @@ export class BookController {
     @Get("/findAll")
     getAllBooks(): Book[] {
         return this.bookService.findAllBookService();
+    }
+    @Get("/exception")
+    async getException(@Query("age") age: number): Promise<any> {
+        return this.bookService.getException(age);
     }
 
     @Get(":id")
