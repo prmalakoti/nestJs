@@ -1,15 +1,17 @@
 import { Controller, Get, Delete, Post, Put, Body, Param } from '@nestjs/common';
-import { Query, UseInterceptors } from '@nestjs/common/decorators';
+import { Query, UseGuards, UseInterceptors } from '@nestjs/common/decorators';
 import { HttpStatus } from '@nestjs/common/enums';
 import { NotFoundException } from '@nestjs/common/exceptions';
 import { ParseIntPipe, ParseUUIDPipe } from '@nestjs/common/pipes';
 import { SkipThrottle } from '@nestjs/throttler/dist/throttler.decorator';
 import { NotFoundError } from 'rxjs';
+import { AuthGuard } from './book.guard';
 import { LoggingInterceptor } from './book.interceptor';
 import { BookService } from './book.service';
 import { Book } from './data/book.dto';
 
 @UseInterceptors(LoggingInterceptor) /* Controller level */
+@UseGuards(AuthGuard /* Controller level*/)
 //@SkipThrottle() /* if we want skip the rate limit */
 @Controller('book')
 export class BookController {
@@ -17,6 +19,7 @@ export class BookController {
 
     }
     @UseInterceptors(LoggingInterceptor) /* Route level */
+    //@UseGuards(AuthGuard) /* Route level */
     @Get("/findAll")
     getAllBooks(): Book[] {
         return this.bookService.findAllBookService();
